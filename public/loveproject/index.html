@@ -166,8 +166,10 @@
 			If you want a kiss, click the heart below 😘<br />
 			<span class="comments">// Touch the heart for a kiss ❤️</span><br /><br />
 
-			<span id="heartspan">
-			<a id="heartLink" href="javascript:void(0)"><i class="fas fa-heart" id="icon"></i></a>
+			<span id="heartspan" style="display:inline-block; margin:15px auto; text-align:center;">
+			<button type="button" id="heartBtn" onclick="triggerKissVideo(event)" ontouchend="triggerKissVideo(event)" style="background:none; border:none; padding:12px; cursor:pointer; outline:none; -webkit-tap-highlight-color:transparent;">
+				<i class="fas fa-heart" id="icon"></i>
+			</button>
 			</span>
 		</div>
 		<div id="loveHeart">
@@ -227,10 +229,16 @@ if (!document.createElement('canvas').getContext) {
 </div>
 
 <script type="text/javascript">
+var lastKissTime = 0;
 function triggerKissVideo(e) {
+    var now = new Date().getTime();
+    if (now - lastKissTime < 800) {
+        if (e) { try { e.preventDefault(); e.stopPropagation(); } catch(err){} }
+        return false;
+    }
+    lastKissTime = now;
     if (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        try { e.preventDefault(); e.stopPropagation(); } catch(err){}
     }
     $('#videoModal').css('display', 'flex').hide().fadeIn(400);
     var video = document.getElementById('kissVideo');
@@ -241,9 +249,10 @@ function triggerKissVideo(e) {
             p.catch(function(err) { console.log('Autoplay issue:', err); });
         }
     }
+    return false;
 }
 
-$(document).on('click touchstart touchend pointerdown', '#heartLink, #heartspan, #heartspan a, #icon', function(e) {
+$(document).on('click touchend', '#heartBtn, #heartLink, #heartspan, #icon', function(e) {
     triggerKissVideo(e);
 });
 

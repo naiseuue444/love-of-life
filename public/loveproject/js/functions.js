@@ -162,13 +162,14 @@ function showMessages() {
 }
 
 function adjustWordsPosition() {
-    var topOffset = (window.offsetY || 250) - ($(window).width() < 768 ? 45 : 35);
+    var isMobile = $(window).width() < 768;
+    var topOffset = (window.offsetY || 250) - (isMobile ? 65 : 35);
     $('#words').css({
         position: 'absolute',
         top: topOffset + 'px',
         left: '50%',
         transform: 'translateX(-50%)',
-        width: '85%',
+        width: isMobile ? '75%' : '85%',
         textAlign: 'center'
     });
 }
