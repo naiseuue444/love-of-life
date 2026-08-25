@@ -22,75 +22,75 @@ export const SCENE_MANAGER = {
         models: {
             // scenes
             galaxy: {
-                galaxy: '/assets/models/galaxy.glb'
+                galaxy: './assets/models/galaxy.glb'
             }
         },
         textures: {
             // scenes
             galaxy: {
-                disc: '/assets/img/discs/disc.png',
+                disc: './assets/img/discs/disc.png',
             },
             solarSystem: {
-                disc: '/assets/img/discs/disc.png',
-                smoke: '/assets/img/other/smoke.png',
-                sun: '/assets/img/planets/sun.jpg',
-                mercury: '/assets/img/planets/mercury.jpg',
-                venus: '/assets/img/planets/venus.jpg',
-                earth: '/assets/img/planets/earth.jpg',
-                earthnight: '/assets/img/planets/earthnight.jpg',
-                earthclouds: '/assets/img/planets/earthclouds.jpg',
-                mars: '/assets/img/planets/mars.jpg',
-                jupiter: '/assets/img/planets/jupiter.jpg',
-                saturn: '/assets/img/planets/saturn.jpg',
-                saturnring: '/assets/img/planets/saturnring.jpg',
-                uranus: '/assets/img/planets/uranus.jpg',
-                uranusring: '/assets/img/planets/uranusring.jpg',
-                neptune: '/assets/img/planets/neptune.jpg',
+                disc: './assets/img/discs/disc.png',
+                smoke: './assets/img/other/smoke.png',
+                sun: './assets/img/planets/sun.jpg',
+                mercury: './assets/img/planets/mercury.jpg',
+                venus: './assets/img/planets/venus.jpg',
+                earth: './assets/img/planets/earth.jpg',
+                earthnight: './assets/img/planets/earthnight.jpg',
+                earthclouds: './assets/img/planets/earthclouds.jpg',
+                mars: './assets/img/planets/mars.jpg',
+                jupiter: './assets/img/planets/jupiter.jpg',
+                saturn: './assets/img/planets/saturn.jpg',
+                saturnring: './assets/img/planets/saturnring.jpg',
+                uranus: './assets/img/planets/uranus.jpg',
+                uranusring: './assets/img/planets/uranusring.jpg',
+                neptune: './assets/img/planets/neptune.jpg',
             },
             continent: {
-                continent: '/assets/img/continent/continent.png',
+                continent: './assets/img/continent/continent.png',
             },
             city: {
-                city: '/assets/img/city/city.png',
+                city: './assets/img/city/city.png',
             },
             district: {
-                district: '/assets/img/district/district.png',
+                district: './assets/img/district/district.png',
             },
             college: {
-                college: '/assets/img/college/college.jpg',
+                college: './assets/img/college/college.jpg',
             },
             class: {
-                class: '/assets/img/class/class.jpg',
+                class: './assets/img/class/class.jpg',
             },
             bench: {
-                bench: '/assets/img/bench/bench.jpg',
+                bench: './assets/img/bench/bench.jpg',
             },
             girl: {
-                girl: '/assets/img/girl/girl.jpg',
+                girl: './assets/img/girl/girl.jpg',
             },
         },
         icons: {
             // zoom progress indicator
             zoomProgressIndicator: {
-                galaxy: '/assets/icons/zoom_progress_indicator/galaxy.png',
-                solarSystemApproach: '/assets/icons/zoom_progress_indicator/space.png',
-                solarSystemRotation: '/assets/icons/zoom_progress_indicator/solarsystem.png',
-                earthApproach: '/assets/icons/zoom_progress_indicator/earthapproach.png',
-                earth: '/assets/icons/zoom_progress_indicator/earth.png',
-                continent: '/assets/icons/zoom_progress_indicator/continent.png',
-                city: '/assets/icons/zoom_progress_indicator/city.png',
-                district: '/assets/icons/zoom_progress_indicator/district.png',
-                college: '/assets/icons/zoom_progress_indicator/district.png',
-                class: '/assets/icons/zoom_progress_indicator/district.png',
-                bench: '/assets/icons/zoom_progress_indicator/district.png',
-                girl: '/assets/icons/zoom_progress_indicator/pin.png',
-                end: '/assets/icons/zoom_progress_indicator/pin.png',
+                galaxy: './assets/icons/zoom_progress_indicator/galaxy.png',
+                solarSystemApproach: './assets/icons/zoom_progress_indicator/space.png',
+                solarSystemRotation: './assets/icons/zoom_progress_indicator/solarsystem.png',
+                earthApproach: './assets/icons/zoom_progress_indicator/earthapproach.png',
+                earth: './assets/icons/zoom_progress_indicator/earth.png',
+                continent: './assets/icons/zoom_progress_indicator/continent.png',
+                city: './assets/icons/zoom_progress_indicator/city.png',
+                district: './assets/icons/zoom_progress_indicator/district.png',
+                college: './assets/icons/zoom_progress_indicator/district.png',
+                class: './assets/icons/zoom_progress_indicator/district.png',
+                bench: './assets/icons/zoom_progress_indicator/district.png',
+                girl: './assets/icons/zoom_progress_indicator/pin.png',
+                end: './assets/icons/zoom_progress_indicator/pin.png',
 
 
                 // character icons
-                astronaut: '/assets/icons/zoom_progress_indicator/astronaut.png',
-                superhero: '/assets/icons/zoom_progress_indicator/superhero.png',
-                human: '/assets/icons/zoom_progress_indicator/human.png',
+                astronaut: './assets/icons/zoom_progress_indicator/astronaut.png',
+                superhero: './assets/icons/zoom_progress_indicator/superhero.png',
+                human: './assets/icons/zoom_progress_indicator/human.png',
             }
         }
     }

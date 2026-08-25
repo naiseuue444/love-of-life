@@ -121,7 +121,7 @@ export function AssetManager() {
       // create a promise for each texture that resolves when the texture is loaded
       const texturePromises = textureEntries.map(
         ({ path }) =>
-          new Promise((resolve, reject) => {
+          new Promise((resolve) => {
             textureLoader.load(
               path,
               (texture) => {
@@ -139,15 +139,14 @@ export function AssetManager() {
               undefined,
               (error) => {
                 console.error(`Error loading texture ${path}:`, error);
-
-                reject(error);
+                updateProgress();
+                resolve(null);
               }
             );
           })
       );
 
       try {
-        // wait for all textures to load
         await Promise.all(texturePromises);
       } catch (error) {
         console.error('Error loading textures:', error);
@@ -160,10 +159,9 @@ export function AssetManager() {
         iconEntries.push({ path: path as string, name });
       });
 
-      // create a promise for each icon, it resolves when the icon is loaded
       const iconPromises = iconEntries.map(
         ({ path }) =>
-          new Promise((resolve, reject) => {
+          new Promise((resolve) => {
             setLoadingText(`Loading interface icons...`);
 
             const img = new Image();
@@ -177,7 +175,7 @@ export function AssetManager() {
             img.onerror = (error) => {
               console.error(`Error loading icon ${path}:`, error);
               updateProgress();
-              reject(error);
+              resolve(null);
             };
 
             img.src = path;
