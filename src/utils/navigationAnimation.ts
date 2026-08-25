@@ -141,14 +141,13 @@ export function createNavigationAnimation({
   let lastTouchTime = 0;
 
   const handleTouchStart = (event: TouchEvent) => {
-    if (event.touches.length > 1) return;
     touchStartY = event.touches[0].clientY;
     lastTouchY = touchStartY;
     lastTouchTime = Date.now();
+    event.preventDefault();
   };
 
   const handleTouchMove = (event: TouchEvent) => {
-    if (event.touches.length > 1) return;
     if (lastTouchY === 0) { // no touch start event yet
       handleTouchStart(event);
       return;
@@ -157,31 +156,37 @@ export function createNavigationAnimation({
     const currentY = event.touches[0].clientY;
     const deltaY = lastTouchY - currentY;
 
-    if (Math.abs(deltaY) < 2) return; // ignore micro jitter
+    if (deltaY === 0) return; // no movement
 
     const currentTime = Date.now();
     const timeDelta = Math.max(10, currentTime - lastTouchTime);
 
     // limit extreme values
-    const clampedDeltaY = Math.max(-60, Math.min(60, deltaY));
+    const clampedDeltaY = Math.max(-100, Math.min(100, deltaY));
 
     // calculate touch velocity with limits
-    touchVelocity = (clampedDeltaY / timeDelta) * 120;
-    touchVelocity = Math.max(-1000, Math.min(1000, touchVelocity));
+    touchVelocity = (clampedDeltaY / timeDelta) * 200;
+    touchVelocity = Math.max(-2000, Math.min(2000, touchVelocity));
 
+    // if clampedDeltaX - right swipe = zoom in, left swipe = zoom out
+    // if clampedDeltaY - up swipe = zoom out, down swipe = zoom in
+    // if -clampedDeltaY - up swipe = zoom in, down swipe = zoom out
     processInput(-clampedDeltaY, touchSensitivity);
 
     lastTouchY = currentY;
     lastTouchTime = currentTime;
+    event.preventDefault();
   };
 
-  const handleTouchEnd = () => {
-    if (Math.abs(touchVelocity) > 40 && Math.abs(touchVelocity) < 1000) {
-      const limitedVelocity = Math.max(-250, Math.min(250, touchVelocity));
-      processInput(limitedVelocity * 0.2, touchSensitivity);
+  const handleTouchEnd = (event: TouchEvent) => {
+    // end of touch event - calculate final velocity
+    if (Math.abs(touchVelocity) > 20 && Math.abs(touchVelocity) < 2000) {
+      const limitedVelocity = Math.max(-500, Math.min(500, touchVelocity));
+      processInput(limitedVelocity * 0.5, touchSensitivity);
     }
 
     touchVelocity = 0;
+    event.preventDefault();
   };
 
   // set up the animation immediately

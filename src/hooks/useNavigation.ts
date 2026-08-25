@@ -18,7 +18,7 @@ export function useNavigation({
     isVisible,
     zoomDirection,
     getZoomOutCameraData,
-    minSwipeDistance = 35
+    minSwipeDistance = 10
 }: NavigationOptions) {
     const sceneIndex = SCENE_MANAGER.SCENE_ORDER.indexOf(sceneKey);
     const defaultCameraData = SCENE_MANAGER.ZOOM_OUT_CAMERA_DATA_DEFAULT;
@@ -50,25 +50,28 @@ export function useNavigation({
         let touchStartY = 0;
 
         const handleInitialTouch = (event: TouchEvent) => {
-            if (event.touches.length > 1) return;
             touchStartY = event.touches[0].clientY; // save start touch position
+            event.preventDefault();
         };
 
         const handleInitialTouchMove = (event: TouchEvent) => {
-            if (!touchStartY || event.touches.length > 1) return;
+            if (!touchStartY) return;
 
+            event.preventDefault();
             const currentY = event.touches[0].clientY;
             const deltaY = touchStartY - currentY;
 
             // ignore not significant swipes
             if (Math.abs(deltaY) < minSwipeDistance) return;
 
-            event.preventDefault();
-
+            // for swipe right (negative deltaX) zoom in do deltaX < 0
+            // for swipe top (positive deltaY) zoom in do deltaY < 0
             if (deltaY > 0) {
                 removeAllListeners();
                 cleanup = zoomFunction(false);
             }
+            // for swipe left (positive deltaX) zoom out do deltaX > 0 (&& if not the first scene)
+            // for swipe bottom (negative deltaY) zoom out do deltaY > 0 (&& if not the first scene)
             else if (deltaY < 0 && !isFirstScene()) {
                 removeAllListeners();
                 cleanup = zoomFunction(true);
