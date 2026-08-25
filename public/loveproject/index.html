@@ -222,34 +222,33 @@ if (!document.createElement('canvas').getContext) {
 </script>
 
 <!-- Video Modal Popup -->
-<div id="videoModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.92); flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(8px);">
-    <button id="closeVideoBtn" style="position:absolute; top:20px; right:20px; background:linear-gradient(135deg, #ff758c, #ff7eb3); color:white; border:none; padding:10px 22px; border-radius:25px; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(255,117,140,0.5);">✕ Close</button>
-    <video id="kissVideo" src="kiss_video.mov" controls playsinline style="max-width:90vw; max-height:82vh; border-radius:18px; box-shadow:0 15px 40px rgba(255,117,140,0.4); border:2px solid rgba(255,255,255,0.2);"></video>
+<div id="videoModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(0,0,0,0.94); flex-direction:column; align-items:center; justify-content:center; backdrop-filter:blur(8px);">
+    <video id="kissVideo" src="kiss_video.mov" controls playsinline style="max-width:92vw; max-height:85vh; border-radius:18px; box-shadow:0 15px 40px rgba(255,117,140,0.5); border:2px solid rgba(255,255,255,0.2);"></video>
 </div>
 
 <script type="text/javascript">
-var videoOpening = false;
-$(document).on('click pointerdown touchend', '#heartLink, #heartspan a, #icon, #heartspan', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (videoOpening) return;
-    videoOpening = true;
-    setTimeout(function() { videoOpening = false; }, 400);
-
+function triggerKissVideo(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     $('#videoModal').css('display', 'flex').hide().fadeIn(400);
     var video = document.getElementById('kissVideo');
     if (video) {
         video.currentTime = 0;
-        video.play().catch(function(err) {
-            console.log('Video play error:', err);
-        });
+        var p = video.play();
+        if (p && p.catch) {
+            p.catch(function(err) { console.log('Autoplay issue:', err); });
+        }
     }
+}
+
+$(document).on('click touchstart touchend pointerdown', '#heartLink, #heartspan, #heartspan a, #icon', function(e) {
+    triggerKissVideo(e);
 });
 
-$(document).on('click pointerdown touchend', '#closeVideoBtn, #videoModal', function(e) {
-    if (e.target === this || e.target.id === 'closeVideoBtn') {
-        e.preventDefault();
-        e.stopPropagation();
+$(document).on('click touchstart', '#videoModal', function(e) {
+    if (e.target.tagName.toLowerCase() !== 'video') {
         var video = document.getElementById('kissVideo');
         if (video) {
             video.pause();

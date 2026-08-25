@@ -65,11 +65,11 @@ export default function LoveButton() {
             WebkitTapHighlightColor: 'transparent',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = isMobile ? 'scale(1.05)' : 'scale(1.06)';
+            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1.05)' : 'scale(1.06)';
             e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 117, 140, 0.85)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1)' : 'scale(1)';
             e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 117, 140, 0.7)';
           }}
         >
@@ -90,12 +90,14 @@ export default function LoveButton() {
             width: '100%',
             height: '100%',
             zIndex: 1000000,
+            backgroundColor: '#ffe',
             display: 'flex',
             flexDirection: 'column',
             pointerEvents: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
-          {/* Embedded LoveProject Webpage - full screen, no extra close button */}
+          {/* Embedded LoveProject Webpage */}
           <iframe
             src={loveProjectUrl}
             title="Love Project"
@@ -103,6 +105,7 @@ export default function LoveButton() {
               width: '100%',
               height: '100%',
               border: 'none',
+              WebkitOverflowScrolling: 'touch',
             }}
           />
         </div>
