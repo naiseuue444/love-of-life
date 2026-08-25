@@ -10,7 +10,11 @@ import { setupZoomCamera } from "../../utils/setupZoomCamera";
 import { useMobile } from "../../contexts/MobileContext";
 import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader, SRGBColorSpace } from "three";
 
-export function District() {
+interface GenericImageSceneProps {
+  sceneKey: string;
+}
+
+export function GenericImageScene({ sceneKey }: GenericImageSceneProps) {
   const { viewport, camera } = useThree() as { viewport: any, camera: PerspectiveCamera };
 
   const {
@@ -20,18 +24,18 @@ export function District() {
     endTransition
   } = useSceneStore();
 
-  const sceneKey = 'district';
   const sceneVisible = currentScene === sceneKey;
-
   const { isMobile } = useMobile();
 
   const imagePlaneRef = useRef<Mesh>(null!);
-  const districtTexture = useLoader(TextureLoader, SCENE_MANAGER.SCENE_ASSETS.textures.district.district);
-  districtTexture.colorSpace = SRGBColorSpace;
+  const texturesObj = SCENE_MANAGER.SCENE_ASSETS.textures as Record<string, Record<string, string>>;
+  const texturePath = texturesObj[sceneKey]?.[sceneKey] || SCENE_MANAGER.SCENE_ASSETS.textures.district.district;
+  const imageTexture = useLoader(TextureLoader, texturePath);
+  imageTexture.colorSpace = SRGBColorSpace;
 
   const imagePlanePosition = IMAGE_SCENE.IMAGE_PLANE_POSITION.clone();
 
-  function zoomInDistrictFunction(backwards: boolean = false) {
+  function zoomInFunction(backwards: boolean = false) {
     setupZoomCamera(camera, sceneKey, backwards, {
       getZoomOutCameraData,
       setZoomOutCameraData,
@@ -39,11 +43,12 @@ export function District() {
     });
 
     if (backwards) {
-      districtTexture.offset.set(0, 0);
-      districtTexture.repeat.set(1, 1);
+      imageTexture.offset.set(0, 0);
+      imageTexture.repeat.set(1, 1);
     }
 
-    const imageData = IMAGE_SCENE.IMAGES_DATA[sceneKey];
+    const imagesDataObj = IMAGE_SCENE.IMAGES_DATA as Record<string, { width: number; height: number; targetRepeat: { x: number; y: number }; targetCoords: { x: number; y: number } }>;
+    const imageData = imagesDataObj[sceneKey] || IMAGE_SCENE.IMAGES_DATA.district;
 
     const targetNormX = imageData.targetCoords.x / imageData.width;
     const targetNormY = imageData.targetCoords.y / imageData.height;
@@ -63,7 +68,7 @@ export function District() {
 
         if (imagePlaneRef.current) {
           const material = imagePlaneRef.current.material as MeshBasicMaterial;
-          material.map = districtTexture;
+          material.map = imageTexture;
           material.needsUpdate = true;
         }
 
@@ -71,14 +76,20 @@ export function District() {
       }
     });
 
-    tl.to(districtTexture.offset, {
+    const isGirlScene = sceneKey === 'girl';
+    const finalTargetOffsetX = isGirlScene ? 0 : targetOffsetX;
+    const finalTargetOffsetY = isGirlScene ? 0 : targetOffsetY;
+    const finalRepeatX = isGirlScene ? 1 : repeatX;
+    const finalRepeatY = isGirlScene ? 1 : repeatY;
+
+    tl.to(imageTexture.offset, {
       duration: 1,
-      x: targetOffsetX,
-      y: targetOffsetY
-    }).to(districtTexture.repeat, {
+      x: finalTargetOffsetX,
+      y: finalTargetOffsetY
+    }).to(imageTexture.repeat, {
       duration: 1,
-      x: repeatX,
-      y: repeatY
+      x: finalRepeatX,
+      y: finalRepeatY
     }, "<");
 
     const animation = createNavigationAnimation({
@@ -95,17 +106,17 @@ export function District() {
 
   useNavigation({
     sceneKey: sceneKey,
-    zoomFunction: zoomInDistrictFunction,
+    zoomFunction: zoomInFunction,
     isVisible: sceneVisible,
     zoomDirection: zoomDirection,
     getZoomOutCameraData: getZoomOutCameraData
   });
 
   const getImagePlaneSize = () => {
-    const imageData = IMAGE_SCENE.IMAGES_DATA[sceneKey];
+    const imagesDataObj = IMAGE_SCENE.IMAGES_DATA as Record<string, { width: number; height: number }>;
+    const imageData = imagesDataObj[sceneKey] || IMAGE_SCENE.IMAGES_DATA.district;
     const imageAspect = imageData.width / imageData.height;
 
-    // on mobile make it fit the screen properly
     if (isMobile) {
       return {
         width: window.innerWidth * camera.aspect * imageAspect / 10,
@@ -125,8 +136,10 @@ export function District() {
     <group>
       <mesh ref={imagePlaneRef} position={imagePlanePosition}>
         <planeGeometry args={[planeSize.width, planeSize.height]} />
-        <meshBasicMaterial map={districtTexture} />
+        <meshBasicMaterial map={imageTexture} />
       </mesh>
     </group>
   );
 }
+
+export default GenericImageScene;

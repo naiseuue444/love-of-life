@@ -10,6 +10,7 @@ import { GLOBAL } from './config/config';
 import NavigationHint from './ui/NavigationHint';
 import LoadingScreen from './ui/LoadingScreen';
 import GitHubLink from './ui/GithubLink';
+import LoveButton from './ui/LoveButton';
 import WebGLWarning from './ui/WebGLWarning';
 import { useWebGL2Enabled } from './hooks/useWebGL2Support';
 import { NoToneMapping } from 'three';
@@ -21,7 +22,7 @@ import SolarSystemScene from './scenes/SolarSystem/SolarSystemScene';
 import ContinentScene from './scenes/Continent/ContinentScene';
 import CityScene from './scenes/City/CityScene';
 import DistrictScene from './scenes/District/DistrictScene';
-import RoomScene from './scenes/Room/RoomScene';
+import GenericImageScene from './scenes/GenericImageScene/GenericImageScene';
 import ErrorBoundary from './ui/ErrorBoundary';
 
 function AppContent() {
@@ -64,7 +65,10 @@ function AppContent() {
             {currentScene === 'continent' && <ContinentScene />}
             {currentScene === 'city' && <CityScene />}
             {currentScene === 'district' && <DistrictScene />}
-            {currentScene === 'room' && <RoomScene />}
+            {currentScene === 'college' && <GenericImageScene sceneKey="college" />}
+            {currentScene === 'class' && <GenericImageScene sceneKey="class" />}
+            {currentScene === 'bench' && <GenericImageScene sceneKey="bench" />}
+            {currentScene === 'girl' && <GenericImageScene sceneKey="girl" />}
           </>
         </Suspense>
 
@@ -79,7 +83,7 @@ function AppContent() {
           <NavigationHint />
           <ZoomProgressIndicator />
           <SceneTextComponent />
-          <GitHubLink />
+          <LoveButton />
         </>
       )}
     </>

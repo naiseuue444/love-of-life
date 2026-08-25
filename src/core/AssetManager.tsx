@@ -13,7 +13,7 @@ import SolarSystemScene from '../scenes/SolarSystem/SolarSystemScene';
 import ContinentScene from '../scenes/Continent/ContinentScene';
 import CityScene from '../scenes/City/CityScene';
 import DistrictScene from '../scenes/District/DistrictScene';
-import RoomScene from '../scenes/Room/RoomScene';
+import GenericImageScene from '../scenes/GenericImageScene/GenericImageScene';
 
 export function AssetManager() {
   const { gl, camera } = useThree();
@@ -23,12 +23,15 @@ export function AssetManager() {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
 
   const precompileScenes = [
-    <GalaxyScene />,
-    <SolarSystemScene />,
-    <ContinentScene />,
-    <CityScene />,
-    <DistrictScene />,
-    <RoomScene />,
+    <GalaxyScene key="galaxy" />,
+    <SolarSystemScene key="solarSystem" />,
+    <ContinentScene key="continent" />,
+    <CityScene key="city" />,
+    <DistrictScene key="district" />,
+    <GenericImageScene key="college" sceneKey="college" />,
+    <GenericImageScene key="class" sceneKey="class" />,
+    <GenericImageScene key="bench" sceneKey="bench" />,
+    <GenericImageScene key="girl" sceneKey="girl" />,
   ];
 
   const totalAssets = useMemo(() => {

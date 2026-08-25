@@ -7,7 +7,7 @@ export const GLOBAL = {
     INITIAL_CAMERA_MOBILE_FOV: 100, // initial camera field of view for mobile devices
     INITIAL_CAMERA_DESKTOP_FOV: 75, // initial camera field of view for desktop devices 
 
-    TONE_MAPPING_EXPOSURE: .5, // exposure for tone mapping
+    TONE_MAPPING_EXPOSURE: 1.0, // exposure for tone mapping
 }
 
 // SceneManager
@@ -15,18 +15,14 @@ export const SCENE_MANAGER = {
     ZOOM_OUT_CAMERA_DATA_DEFAULT: { position: new Vector3(0, 0, 0), quaternion: new Quaternion(0, 0, 0, 1), fov: 75, zoomedIn: false }, // default zoom out camera data for all scenes
     SCENE_ORDER: [ // the order of the scenes, in which they will be loaded and rendered
         'galaxy', 'solarSystemApproach', 'solarSystemRotation',
-        'earthApproach', 'earth', 'continent', 'city', 'district', 'room'
+        'earthApproach', 'earth', 'continent', 'city', 'district',
+        'college', 'class', 'bench', 'girl'
     ],
     SCENE_ASSETS: { // used to preload assets
         models: {
             // scenes
             galaxy: {
                 galaxy: '/assets/models/galaxy.glb'
-            },
-            room: {
-                room: '/assets/models/room.glb',
-                phone: '/assets/models/phone.glb',
-                monitor: '/assets/models/monitor.glb',
             }
         },
         textures: {
@@ -52,13 +48,25 @@ export const SCENE_MANAGER = {
                 neptune: '/assets/img/planets/neptune.jpg',
             },
             continent: {
-                continent: '/assets/img/continent/continent.jpg',
+                continent: '/assets/img/continent/continent.png',
             },
             city: {
-                city: '/assets/img/city/city.jpg',
+                city: '/assets/img/city/city.png',
             },
             district: {
-                district: '/assets/img/district/district.jpg',
+                district: '/assets/img/district/district.png',
+            },
+            college: {
+                college: '/assets/img/college/college.jpg',
+            },
+            class: {
+                class: '/assets/img/class/class.jpg',
+            },
+            bench: {
+                bench: '/assets/img/bench/bench.jpg',
+            },
+            girl: {
+                girl: '/assets/img/girl/girl.jpg',
             },
         },
         icons: {
@@ -72,8 +80,10 @@ export const SCENE_MANAGER = {
                 continent: '/assets/icons/zoom_progress_indicator/continent.png',
                 city: '/assets/icons/zoom_progress_indicator/city.png',
                 district: '/assets/icons/zoom_progress_indicator/district.png',
-                room: '/assets/icons/zoom_progress_indicator/room.png',
-                // end (last point) - when last scene zoomed in (not a real scene, just visual because the zoom indicator goes below the room)
+                college: '/assets/icons/zoom_progress_indicator/district.png',
+                class: '/assets/icons/zoom_progress_indicator/district.png',
+                bench: '/assets/icons/zoom_progress_indicator/district.png',
+                girl: '/assets/icons/zoom_progress_indicator/pin.png',
                 end: '/assets/icons/zoom_progress_indicator/pin.png',
 
 
@@ -273,9 +283,13 @@ export const EARTH = {
 export const IMAGE_SCENE = {
     IMAGE_PLANE_POSITION: new Vector3(5, 5, 5), // image position
     IMAGES_DATA: {
-        continent: { width: 1846, height: 1080, targetRepeat: { x: 0.1, y: 0.1 }, targetCoords: { x: 800, y: 700 } },
-        city: { width: 1846, height: 1080, targetRepeat: { x: 0.1, y: 0.1 }, targetCoords: { x: 670, y: 500 } },
-        district: { width: 1846, height: 1080, targetRepeat: { x: 0.1, y: 0.1 }, targetCoords: { x: 1150, y: 850 } },
+        continent: { width: 2823, height: 1431, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 1480, y: 1020 } },
+        city: { width: 2901, height: 1531, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 1450, y: 765 } },
+        district: { width: 1290, height: 959, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 480 } },
+        college: { width: 1080, height: 1920, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 540, y: 960 } },
+        class: { width: 1290, height: 1609, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 804 } },
+        bench: { width: 1060, height: 1357, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 530, y: 678 } },
+        girl: { width: 1290, height: 1871, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 935 } },
     }
 }
 

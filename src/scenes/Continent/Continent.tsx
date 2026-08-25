@@ -8,7 +8,7 @@ import { useNavigation } from "../../hooks/useNavigation";
 import { useMotionBlurComposer } from "../../hooks/usePostProcessing";
 import { setupZoomCamera } from "../../utils/setupZoomCamera";
 import { useMobile } from "../../contexts/MobileContext";
-import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader } from "three";
+import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader, SRGBColorSpace } from "three";
 
 export function Continent() {
   const { viewport, camera } = useThree() as { viewport: any, camera: PerspectiveCamera };
@@ -27,18 +27,9 @@ export function Continent() {
 
   const imagePlaneRef = useRef<Mesh>(null!);
   const continentTexture = useLoader(TextureLoader, SCENE_MANAGER.SCENE_ASSETS.textures.continent.continent);
+  continentTexture.colorSpace = SRGBColorSpace;
 
   const imagePlanePosition = IMAGE_SCENE.IMAGE_PLANE_POSITION.clone();
-
-  // composer for post processing motion blur effect (zoom in images)
-  const composer = useMotionBlurComposer(sceneVisible)
-
-  // render
-  useFrame(() => {
-    if (composer) {
-      composer.render();
-    }
-  })
 
   function zoomInContinentFunction(backwards: boolean = false) {
     setupZoomCamera(camera, sceneKey, backwards, {
@@ -47,7 +38,6 @@ export function Continent() {
       endTransition
     });
 
-    // reset the texture offset and repeat to show the entire image again
     if (backwards) {
       continentTexture.offset.set(0, 0);
       continentTexture.repeat.set(1, 1);
@@ -55,15 +45,16 @@ export function Continent() {
 
     const imageData = IMAGE_SCENE.IMAGES_DATA[sceneKey];
 
-    // convert the approx target pixel coordinate into normalized UV coordinates
-    const targetUV = {
-      x: imageData.targetCoords.x / imageData.width,
-      y: imageData.targetCoords.y / imageData.height
-    };
+    const targetNormX = imageData.targetCoords.x / imageData.width;
+    const targetNormY = imageData.targetCoords.y / imageData.height;
+    const repeatX = imageData.targetRepeat.x;
+    const repeatY = imageData.targetRepeat.y;
+
+    const targetOffsetX = Math.max(0, Math.min(1 - repeatX, targetNormX - repeatX / 2));
+    const targetOffsetY = Math.max(0, Math.min(1 - repeatY, (1 - targetNormY) - repeatY / 2));
 
     const tl = gsap.timeline({
       onStart: () => {
-        // set the camera position and look at the center of the image
         camera.position.set(imagePlanePosition.x, imagePlanePosition.y, imagePlanePosition.z + 10);
         camera.lookAt(imagePlanePosition.x, imagePlanePosition.y, imagePlanePosition.z);
 
@@ -81,13 +72,13 @@ export function Continent() {
     });
 
     tl.to(continentTexture.offset, {
-      x: targetUV.x,
-      y: targetUV.y
+      x: targetOffsetX,
+      y: targetOffsetY
     }).to(
       continentTexture.repeat,
       {
-        x: imageData.targetRepeat.x,
-        y: imageData.targetRepeat.y
+        x: repeatX,
+        y: repeatY
       },
       "<"
     );

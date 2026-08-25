@@ -8,7 +8,7 @@ import { useNavigation } from "../../hooks/useNavigation";
 import { useMotionBlurComposer } from "../../hooks/usePostProcessing";
 import { setupZoomCamera } from "../../utils/setupZoomCamera";
 import { useMobile } from "../../contexts/MobileContext";
-import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader } from "three";
+import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader, SRGBColorSpace } from "three";
 
 export function City() {
   const { viewport, camera } = useThree() as { viewport: any, camera: PerspectiveCamera };
@@ -26,19 +26,9 @@ export function City() {
 
   const imagePlaneRef = useRef<Mesh>(null!);
   const cityTexture = useLoader(TextureLoader, SCENE_MANAGER.SCENE_ASSETS.textures.city.city);
+  cityTexture.colorSpace = SRGBColorSpace;
 
   const imagePlanePosition = IMAGE_SCENE.IMAGE_PLANE_POSITION.clone();
-
-
-  // composer for post processing motion blur effect (zoom in images)
-  const composer = useMotionBlurComposer(sceneVisible)
-
-  // render
-  useFrame(() => {
-    if (composer) {
-      composer.render();
-    }
-  })
 
   function zoomInCityFunction(backwards: boolean = false) {
     setupZoomCamera(camera, sceneKey, backwards, {
@@ -47,23 +37,23 @@ export function City() {
       endTransition
     });
 
-    // reset the texture offset and repeat to show the entire image again
     if (backwards) {
       cityTexture.offset.set(0, 0);
       cityTexture.repeat.set(1, 1);
     }
 
-    const imageData = IMAGE_SCENE.IMAGES_DATA[sceneKey]
+    const imageData = IMAGE_SCENE.IMAGES_DATA[sceneKey];
 
-    // convert the approx target pixel coordinate into normalized UV coordinates
-    const targetUV = {
-      x: imageData.targetCoords.x / imageData.width,
-      y: imageData.targetCoords.y / imageData.height
-    };
+    const targetNormX = imageData.targetCoords.x / imageData.width;
+    const targetNormY = imageData.targetCoords.y / imageData.height;
+    const repeatX = imageData.targetRepeat.x;
+    const repeatY = imageData.targetRepeat.y;
+
+    const targetOffsetX = Math.max(0, Math.min(1 - repeatX, targetNormX - repeatX / 2));
+    const targetOffsetY = Math.max(0, Math.min(1 - repeatY, (1 - targetNormY) - repeatY / 2));
 
     const tl = gsap.timeline({
       onStart: () => {
-        // set the camera position and look at the center of the image
         camera.position.set(imagePlanePosition.x, imagePlanePosition.y, imagePlanePosition.z + 10);
         camera.lookAt(imagePlanePosition.x, imagePlanePosition.y, imagePlanePosition.z);
 
@@ -81,16 +71,15 @@ export function City() {
     });
 
     tl.to(cityTexture.offset, {
-      x: targetUV.x,
-      y: targetUV.y,
+      x: targetOffsetX,
+      y: targetOffsetY
     }).to(
       cityTexture.repeat,
       {
-        // lower repeat values show a smaller portion of the image, "zooming in" (lower value = higher zoom)
-        x: imageData.targetRepeat.x,
-        y: imageData.targetRepeat.y
+        x: repeatX,
+        y: repeatY
       },
-      "<" // run concurrently
+      "<"
     );
 
     const animation = createNavigationAnimation({
