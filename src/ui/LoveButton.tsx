@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useSceneStore } from '../core/SceneManager';
 import { useMobile } from '../contexts/MobileContext';
 
@@ -12,9 +13,13 @@ export default function LoveButton() {
     return null;
   }
 
-  const loveProjectUrl = './loveproject/index.html';
+  // Calculate base URL cleanly for localhost & GitHub Pages
+  const metaEnv = (import.meta as unknown as { env?: { BASE_URL?: string } }).env;
+  const rawBase = metaEnv?.BASE_URL || './';
+  const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+  const loveProjectUrl = `${baseUrl}loveproject/index.html`;
 
-  return (
+  return createPortal(
     <>
       {/* Heart Peach Button in Bottom Left */}
       <div
@@ -22,14 +27,19 @@ export default function LoveButton() {
           position: 'fixed',
           bottom: isMobile ? '20px' : '30px',
           left: isMobile ? '65px' : '85px',
-          zIndex: 99999,
+          zIndex: 999999,
           pointerEvents: 'auto',
         }}
       >
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
             setIsOpen(true);
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
           }}
           style={{
             background: 'linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)',
@@ -47,6 +57,8 @@ export default function LoveButton() {
             gap: '8px',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             pointerEvents: 'auto',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.06)';
@@ -67,8 +79,11 @@ export default function LoveButton() {
         <div
           style={{
             position: 'fixed',
-            inset: 0,
-            zIndex: 100000,
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 1000000,
             backgroundColor: '#ffe',
             display: 'flex',
             flexDirection: 'column',
@@ -77,12 +92,20 @@ export default function LoveButton() {
         >
           {/* Close button in top right */}
           <button
-            onClick={() => setIsOpen(false)}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setIsOpen(false);
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+            }}
             style={{
               position: 'fixed',
               top: '20px',
               right: '25px',
-              zIndex: 100001,
+              zIndex: 1000001,
               background: 'linear-gradient(135deg, #ff758c, #ff7eb3)',
               color: 'white',
               border: 'none',
@@ -103,13 +126,14 @@ export default function LoveButton() {
             src={loveProjectUrl}
             title="Love Project"
             style={{
-              width: '100vw',
-              height: '100vh',
+              width: '100%',
+              height: '100%',
               border: 'none',
             }}
           />
         </div>
       )}
-    </>
+    </>,
+    document.body
   );
 }
