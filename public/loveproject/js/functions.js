@@ -1,22 +1,27 @@
-
 var $window = $(window), gardenCtx, gardenCanvas, $garden, garden;
 var clientWidth = $(window).width();
 var clientHeight = $(window).height();
 
 $(function () {
-    // setup garden
-	$loveHeart = $("#loveHeart");
-	var offsetX = $loveHeart.width() / 2;
-	var offsetY = $loveHeart.height() / 2 - 55;
+    var winW = $(window).width();
+    var scale = winW < 768 ? Math.min(1, (winW - 20) / 670) : 1;
+    var heartW = Math.round(670 * scale);
+    var heartH = Math.round(625 * scale);
+
+    $loveHeart = $("#loveHeart");
+    $loveHeart.css({ width: heartW + 'px', height: heartH + 'px' });
+
     $garden = $("#garden");
     gardenCanvas = $garden[0];
-	gardenCanvas.width = $("#loveHeart").width();
-    gardenCanvas.height = $("#loveHeart").height()
+    gardenCanvas.width = heartW;
+    gardenCanvas.height = heartH;
     gardenCtx = gardenCanvas.getContext("2d");
     gardenCtx.globalCompositeOperation = "lighter";
     garden = new Garden(gardenCtx, gardenCanvas);
-	
-    // Let CSS Flexbox handle centering and side-by-side alignment
+
+    window.heartScale = scale;
+    window.offsetX = heartW / 2;
+    window.offsetY = heartH / 2 - (55 * scale);
 
     // renderLoop
     setInterval(function () {
@@ -33,138 +38,147 @@ $(window).resize(function() {
 });
 
 function getHeartPoint(angle) {
-	var t = angle / Math.PI;
-	var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
-	var y = - 20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-	return new Array(offsetX + x, offsetY + y);
+    var t = angle / Math.PI;
+    var s = window.heartScale || 1;
+    var x = (19.5 * s) * (16 * Math.pow(Math.sin(t), 3));
+    var y = - (20 * s) * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    return new Array((window.offsetX || 335) + x, (window.offsetY || 257) + y);
 }
 
 function startHeartAnimation() {
-	var interval = 50;
-	var angle = 10;
-	var heart = new Array();
-	var animationTimer = setInterval(function () {
-		var bloom = getHeartPoint(angle);
-		var draw = true;
-		for (var i = 0; i < heart.length; i++) {
-			var p = heart[i];
-			var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2));
-			if (distance < Garden.options.bloomRadius.max * 1.3) {
-				draw = false;
-				break;
-			}
-		}
-		if (draw) {
-			heart.push(bloom);
-			garden.createRandomBloom(bloom[0], bloom[1]);
-		}
-		if (angle >= 30) {
-			clearInterval(animationTimer);
-			showMessages();
-		} else {
-			angle += 0.2;
-		}
-	}, interval);
+    var interval = 50;
+    var angle = 10;
+    var heart = new Array();
+    var animationTimer = setInterval(function () {
+        var bloom = getHeartPoint(angle);
+        var draw = true;
+        for (var i = 0; i < heart.length; i++) {
+            var p = heart[i];
+            var distance = Math.sqrt(Math.pow(p[0] - bloom[0], 2) + Math.pow(p[1] - bloom[1], 2));
+            if (distance < Garden.options.bloomRadius.max * 1.3) {
+                draw = false;
+                break;
+            }
+        }
+        if (draw) {
+            heart.push(bloom);
+            garden.createRandomBloom(bloom[0], bloom[1]);
+        }
+        if (angle >= 30) {
+            clearInterval(animationTimer);
+            showMessages();
+        } else {
+            angle += 0.2;
+        }
+    }, interval);
 }
 
 (function($) {
-	$.fn.typewriter = function() {
-		this.each(function() {
-			var $ele = $(this);
-			var destination = $ele[0];
-			var sourceHtml = $ele.html();
-			$ele.html('');
-			
-			var temp = document.createElement('div');
-			temp.innerHTML = sourceHtml;
+    $.fn.typewriter = function() {
+        this.each(function() {
+            var $ele = $(this);
+            var destination = $ele[0];
+            var sourceHtml = $ele.html();
+            $ele.html('');
+            
+            var temp = document.createElement('div');
+            temp.innerHTML = sourceHtml;
 
-			function typeNode(sourceNode, targetParent, onComplete) {
-				var children = Array.from(sourceNode.childNodes);
-				var childIndex = 0;
+            function typeNode(sourceNode, targetParent, onComplete) {
+                var children = Array.from(sourceNode.childNodes);
+                var childIndex = 0;
 
-				function nextChild() {
-					if (childIndex >= children.length) {
-						if (onComplete) onComplete();
-						return;
-					}
+                function nextChild() {
+                    if (childIndex >= children.length) {
+                        if (onComplete) onComplete();
+                        return;
+                    }
 
-					var child = children[childIndex++];
-					if (child.nodeType === Node.TEXT_NODE) {
-						var text = child.textContent;
-						var textNode = document.createTextNode('');
-						targetParent.appendChild(textNode);
-						var charIndex = 0;
+                    var child = children[childIndex++];
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        var text = child.textContent;
+                        var textNode = document.createTextNode('');
+                        targetParent.appendChild(textNode);
+                        var charIndex = 0;
 
-						var textInterval = setInterval(function() {
-							if (charIndex < text.length) {
-								textNode.textContent += text.charAt(charIndex++);
-								destination.scrollTop = destination.scrollHeight;
-							} else {
-								clearInterval(textInterval);
-								nextChild();
-							}
-						}, 60);
-					} else if (child.nodeType === Node.ELEMENT_NODE) {
-						var newElem = child.cloneNode(false);
-						targetParent.appendChild(newElem);
-						typeNode(child, newElem, function() {
-							nextChild();
-						});
-					} else {
-						nextChild();
-					}
-				}
+                        var textInterval = setInterval(function() {
+                            if (charIndex < text.length) {
+                                textNode.textContent += text.charAt(charIndex++);
+                                destination.scrollTop = destination.scrollHeight;
+                            } else {
+                                clearInterval(textInterval);
+                                nextChild();
+                            }
+                        }, 60);
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        var newElem = child.cloneNode(false);
+                        targetParent.appendChild(newElem);
+                        typeNode(child, newElem, function() {
+                            nextChild();
+                        });
+                    } else {
+                        nextChild();
+                    }
+                }
 
-				nextChild();
-			}
+                nextChild();
+            }
 
-			typeNode(temp, destination);
-		});
-		return this;
-	};
+            typeNode(temp, destination);
+        });
+        return this;
+    };
 })(jQuery);
 
 function timeElapse(date){
-	var current = new Date();
-	var seconds = (current.getTime() - date.getTime()) / 1000;
-	var years = Math.floor(seconds / (3600 * 24 * 365.25));
-	seconds = seconds % (3600 * 24 * 365.25);
-	var days = Math.floor(seconds / (3600 * 24));
-	seconds = seconds % (3600 * 24);
-	var hours = Math.floor(seconds / 3600);
-	if (hours < 10) {
-		hours = "0" + hours;
-	}
-	seconds = seconds % 3600;
-	var minutes = Math.floor(seconds / 60);
-	if (minutes < 10) {
-		minutes = "0" + minutes;
-	}
-	seconds = Math.floor(seconds % 60);
-	if (seconds < 10) {
-		seconds = "0" + seconds;
-	}
-	var result = "<span class=\"digit\">" + years + "</span> years <span class=\"digit\">" + days + "</span> days <span class=\"digit\">" + hours + "</span> hours <span class=\"digit\">" + minutes + "</span> minutes <span class=\"digit\">" + seconds + "</span> seconds"; 
-	$("#elapseClock").html(result);
+    var current = new Date();
+    var seconds = (current.getTime() - date.getTime()) / 1000;
+    var years = Math.floor(seconds / (3600 * 24 * 365.25));
+    seconds = seconds % (3600 * 24 * 365.25);
+    var days = Math.floor(seconds / (3600 * 24));
+    seconds = seconds % (3600 * 24);
+    var hours = Math.floor(seconds / 3600);
+    if (hours < 10) {
+        hours = "0" + hours;
+    }
+    seconds = seconds % 3600;
+    var minutes = Math.floor(seconds / 60);
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+    seconds = Math.floor(seconds % 60);
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+    var result = "<span class=\"digit\">" + years + "</span> years <span class=\"digit\">" + days + "</span> days <span class=\"digit\">" + hours + "</span> hours <span class=\"digit\">" + minutes + "</span> minutes <span class=\"digit\">" + seconds + "</span> seconds"; 
+    $("#elapseClock").html(result);
 }
 
 function showMessages() {
-	adjustWordsPosition();
-	$('#messages').fadeIn(5000, function() {
-		showLoveU();
-	});
+    adjustWordsPosition();
+    $('#messages').fadeIn(5000, function() {
+        showLoveU();
+    });
 }
 
 function adjustWordsPosition() {
-	$('#words').css("position", "absolute");
-	$('#words').css("top", $("#garden").position().top + 155);
-	$('#words').css("left", $("#garden").position().left + 75);
+    var topOffset = (window.offsetY || 250) - ($(window).width() < 768 ? 45 : 35);
+    $('#words').css({
+        position: 'absolute',
+        top: topOffset + 'px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '85%',
+        textAlign: 'center'
+    });
 }
 
 function adjustCodePosition() {
-	$('#code').css("margin-top", ($("#garden").height() - $("#code").height()) / 2);
+    if ($(window).width() >= 768) {
+        $('#code').css("margin-top", Math.max(0, ($("#garden").height() - $("#code").height()) / 2));
+    }
 }
 
 function showLoveU() {
-	$('#loveu').fadeIn(3000);
+    $('#loveu').fadeIn(3000);
 }
