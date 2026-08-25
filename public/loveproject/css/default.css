@@ -68,7 +68,8 @@ body {
 	font-family: "Consolas", "Monaco", "Bitstream Vera Sans Mono", "Courier New", sans-serif;
 	width: 85%;
 	max-width: 500px;
-	color: #555;
+	color: #222;
+	font-weight: 700;
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
@@ -81,7 +82,8 @@ body {
 	text-align: center;
 	font-size: 18px;
 	line-height: 1.45;
-	color: #444;
+	color: #222;
+	font-weight: 700;
 }
 
 #elapseClock {
@@ -90,13 +92,16 @@ body {
 	margin-top: 8px;
 	margin-bottom: 8px;
 	white-space: nowrap;
+	font-weight: 700;
+	color: #333;
 }
 
 #elapseClock .digit {
 	font-family: "digit", sans-serif;
-	font-size: 26px;
+	font-size: 28px;
 	text-align: center;
 	color: #d6336c;
+	font-weight: 700;
 }
 
 #loveu {
@@ -106,13 +111,16 @@ body {
 	text-align: center;
 	display: none;
 	line-height: 1.4;
+	font-weight: 700;
+	color: #222;
 }
 
 #loveu .signature {
 	margin-top: 4px;
 	font-size: 14px;
 	font-style: italic;
-	color: #666;
+	color: #444;
+	font-weight: 700;
 }
 
 #icon {
@@ -153,10 +161,12 @@ body {
 	#words {
 		width: 75% !important;
 		max-width: 290px;
+		font-weight: 700 !important;
 	}
 	#messages {
 		font-size: 13px !important;
 		line-height: 1.3;
+		font-weight: 700 !important;
 	}
 	#elapseClock {
 		font-size: 10px !important;
@@ -164,17 +174,21 @@ body {
 		margin-bottom: 4px;
 		white-space: normal;
 		line-height: 1.3;
+		font-weight: 700 !important;
 	}
 	#elapseClock .digit {
 		font-size: 16px !important;
+		font-weight: 700 !important;
 	}
 	#loveu {
 		font-size: 12px !important;
 		margin-top: 4px;
 		line-height: 1.3;
+		font-weight: 700 !important;
 	}
 	#loveu .signature {
 		font-size: 11px !important;
 		margin-top: 2px;
+		font-weight: 700 !important;
 	}
 }
