@@ -1,11 +1,10 @@
 import { useRef } from "react";
-import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import { IMAGE_SCENE, GLOBAL, SCENE_MANAGER } from "../../config/config";
 import { gsap } from "gsap";
 import { useSceneStore } from "../../core/SceneManager";
 import { createNavigationAnimation } from "../../utils/navigationAnimation";
 import { useNavigation } from "../../hooks/useNavigation";
-import { useMotionBlurComposer } from "../../hooks/usePostProcessing";
 import { setupZoomCamera } from "../../utils/setupZoomCamera";
 import { useMobile } from "../../contexts/MobileContext";
 import { Mesh, MeshBasicMaterial, PerspectiveCamera, TextureLoader, SRGBColorSpace } from "three";
