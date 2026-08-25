@@ -25,12 +25,6 @@ export default function LoveButton() {
     setIsOpen(true);
   };
 
-  const handleClose = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsOpen(false);
-  };
-
   return createPortal(
     <>
       {/* Heart Peach Button - Bottom Center on Mobile, Bottom Left on Desktop */}
@@ -71,11 +65,11 @@ export default function LoveButton() {
             WebkitTapHighlightColor: 'transparent',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1.05)' : 'scale(1.06)';
+            e.currentTarget.style.transform = isMobile ? 'scale(1.05)' : 'scale(1.06)';
             e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 117, 140, 0.85)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1)' : 'scale(1)';
+            e.currentTarget.style.transform = 'scale(1)';
             e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 117, 140, 0.7)';
           }}
         >
@@ -96,40 +90,12 @@ export default function LoveButton() {
             width: '100%',
             height: '100%',
             zIndex: 1000000,
-            backgroundColor: '#ffe',
             display: 'flex',
             flexDirection: 'column',
             pointerEvents: 'auto',
-            WebkitOverflowScrolling: 'touch',
           }}
         >
-          {/* Close button in top right */}
-          <button
-            type="button"
-            onClick={handleClose}
-            onTouchEnd={handleClose}
-            style={{
-              position: 'fixed',
-              top: '15px',
-              right: '15px',
-              zIndex: 1000001,
-              background: 'linear-gradient(135deg, #ff758c, #ff7eb3)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 22px',
-              borderRadius: '25px',
-              fontSize: '15px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 4px 18px rgba(255, 117, 140, 0.7)',
-              pointerEvents: 'auto',
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            ✕ Close
-          </button>
-
-          {/* Embedded LoveProject Webpage */}
+          {/* Embedded LoveProject Webpage - full screen, no extra close button */}
           <iframe
             src={loveProjectUrl}
             title="Love Project"
@@ -137,7 +103,6 @@ export default function LoveButton() {
               width: '100%',
               height: '100%',
               border: 'none',
-              WebkitOverflowScrolling: 'touch',
             }}
           />
         </div>

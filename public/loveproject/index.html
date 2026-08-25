@@ -228,18 +228,28 @@ if (!document.createElement('canvas').getContext) {
 </div>
 
 <script type="text/javascript">
-$(document).on('click', '#heartLink, #heartspan a', function(e) {
+var videoOpening = false;
+$(document).on('click pointerdown touchend', '#heartLink, #heartspan a, #icon, #heartspan', function(e) {
     e.preventDefault();
+    e.stopPropagation();
+    if (videoOpening) return;
+    videoOpening = true;
+    setTimeout(function() { videoOpening = false; }, 400);
+
     $('#videoModal').css('display', 'flex').hide().fadeIn(400);
     var video = document.getElementById('kissVideo');
     if (video) {
         video.currentTime = 0;
-        video.play();
+        video.play().catch(function(err) {
+            console.log('Video play error:', err);
+        });
     }
 });
 
-$(document).on('click', '#closeVideoBtn, #videoModal', function(e) {
+$(document).on('click pointerdown touchend', '#closeVideoBtn, #videoModal', function(e) {
     if (e.target === this || e.target.id === 'closeVideoBtn') {
+        e.preventDefault();
+        e.stopPropagation();
         var video = document.getElementById('kissVideo');
         if (video) {
             video.pause();
