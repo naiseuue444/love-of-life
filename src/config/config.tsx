@@ -288,7 +288,7 @@ export const IMAGE_SCENE = {
         district: { width: 1290, height: 959, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 480 } },
         college: { width: 1080, height: 1920, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 540, y: 960 } },
         class: { width: 1290, height: 1609, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 804 } },
-        bench: { width: 1060, height: 1357, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 530, y: 678 } },
+        bench: { width: 1060, height: 1357, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 260, y: 678 } },
         girl: { width: 1290, height: 1871, targetRepeat: { x: 0.2, y: 0.2 }, targetCoords: { x: 645, y: 935 } },
     }
 }
