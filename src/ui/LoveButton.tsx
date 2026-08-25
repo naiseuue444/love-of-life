@@ -19,54 +19,64 @@ export default function LoveButton() {
   const baseUrl = rawBase.endsWith('/') ? rawBase : rawBase + '/';
   const loveProjectUrl = `${baseUrl}loveproject/index.html`;
 
+  const handleOpen = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(true);
+  };
+
+  const handleClose = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(false);
+  };
+
   return createPortal(
     <>
-      {/* Heart Peach Button in Bottom Left */}
+      {/* Heart Peach Button - Bottom Center on Mobile, Bottom Left on Desktop */}
       <div
         style={{
           position: 'fixed',
-          bottom: isMobile ? '20px' : '30px',
-          left: isMobile ? '65px' : '85px',
+          bottom: isMobile ? '25px' : '30px',
+          left: isMobile ? '50%' : '85px',
+          transform: isMobile ? 'translateX(-50%)' : 'none',
           zIndex: 999999,
           pointerEvents: 'auto',
         }}
       >
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setIsOpen(true);
-          }}
-          onTouchStart={(e) => {
-            e.stopPropagation();
-          }}
+          onClick={handleOpen}
+          onTouchEnd={handleOpen}
+          onPointerDown={(e) => e.stopPropagation()}
           style={{
             background: 'linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)',
             color: 'white',
             border: 'none',
             borderRadius: '30px',
-            padding: isMobile ? '10px 18px' : '14px 26px',
-            fontSize: isMobile ? '14px' : '17px',
+            padding: isMobile ? '12px 22px' : '14px 26px',
+            fontSize: isMobile ? '15px' : '17px',
             fontWeight: 700,
             fontFamily: 'system-ui, -apple-system, sans-serif',
             cursor: 'pointer',
-            boxShadow: '0 6px 20px rgba(255, 117, 140, 0.6), 0 0 12px rgba(255, 126, 179, 0.4)',
+            boxShadow: '0 6px 20px rgba(255, 117, 140, 0.7), 0 0 14px rgba(255, 126, 179, 0.5)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
+            whiteSpace: 'nowrap',
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             pointerEvents: 'auto',
             userSelect: 'none',
             WebkitUserSelect: 'none',
+            WebkitTapHighlightColor: 'transparent',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.06)';
+            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1.05)' : 'scale(1.06)';
             e.currentTarget.style.boxShadow = '0 8px 25px rgba(255, 117, 140, 0.85)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 117, 140, 0.6)';
+            e.currentTarget.style.transform = isMobile ? 'translateX(-50%) scale(1)' : 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 117, 140, 0.7)';
           }}
         >
           <span style={{ fontSize: '1.2em' }}>❤️</span>
@@ -81,30 +91,27 @@ export default function LoveButton() {
             position: 'fixed',
             top: 0,
             left: 0,
-            width: '100vw',
-            height: '100vh',
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: '100%',
             zIndex: 1000000,
             backgroundColor: '#ffe',
             display: 'flex',
             flexDirection: 'column',
             pointerEvents: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           {/* Close button in top right */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setIsOpen(false);
-            }}
-            onTouchStart={(e) => {
-              e.stopPropagation();
-            }}
+            onClick={handleClose}
+            onTouchEnd={handleClose}
             style={{
               position: 'fixed',
-              top: '20px',
-              right: '25px',
+              top: '15px',
+              right: '15px',
               zIndex: 1000001,
               background: 'linear-gradient(135deg, #ff758c, #ff7eb3)',
               color: 'white',
@@ -116,6 +123,7 @@ export default function LoveButton() {
               cursor: 'pointer',
               boxShadow: '0 4px 18px rgba(255, 117, 140, 0.7)',
               pointerEvents: 'auto',
+              WebkitTapHighlightColor: 'transparent',
             }}
           >
             ✕ Close
@@ -129,6 +137,7 @@ export default function LoveButton() {
               width: '100%',
               height: '100%',
               border: 'none',
+              WebkitOverflowScrolling: 'touch',
             }}
           />
         </div>
