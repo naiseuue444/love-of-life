@@ -132,21 +132,32 @@ function startHeartAnimation() {
 
 function timeElapse(date){
     var current = new Date();
-    var seconds = (current.getTime() - date.getTime()) / 1000;
-    var years = Math.floor(seconds / (3600 * 24 * 365.25));
-    seconds = seconds % (3600 * 24 * 365.25);
-    var days = Math.floor(seconds / (3600 * 24));
-    seconds = seconds % (3600 * 24);
-    var hours = Math.floor(seconds / 3600);
+    var years = current.getFullYear() - date.getFullYear();
+    var tempDate = new Date(date.getTime());
+    tempDate.setFullYear(date.getFullYear() + years);
+
+    if (current < tempDate) {
+        years--;
+        tempDate = new Date(date.getTime());
+        tempDate.setFullYear(date.getFullYear() + years);
+    }
+
+    var diffSeconds = Math.max(0, Math.floor((current.getTime() - tempDate.getTime()) / 1000));
+    var days = Math.floor(diffSeconds / (3600 * 24));
+    diffSeconds %= (3600 * 24);
+
+    var hours = Math.floor(diffSeconds / 3600);
+    diffSeconds %= 3600;
+
+    var minutes = Math.floor(diffSeconds / 60);
+    var seconds = diffSeconds % 60;
+
     if (hours < 10) {
         hours = "0" + hours;
     }
-    seconds = seconds % 3600;
-    var minutes = Math.floor(seconds / 60);
     if (minutes < 10) {
         minutes = "0" + minutes;
     }
-    seconds = Math.floor(seconds % 60);
     if (seconds < 10) {
         seconds = "0" + seconds;
     }
